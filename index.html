@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>O Templo do Terror - Ficha RPG</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Special+Elite&display=swap" rel="stylesheet">
     <link rel="manifest" href="metadata.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,153 +21,494 @@
         body {
             font-family: 'Special Elite', cursive;
             background-color: var(--parchment-bg);
-            /* URL absoluta para evitar erro 404 */
             background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
             color: var(--ink-color);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .medieval-font {
-            font-family: 'MedievalSharp', cursive;
-        }
+        .medieval-font { font-family: 'MedievalSharp', cursive; }
 
-        /* Moldura de papel queimado */
+        /* Moldura e Efeitos Visuais */
         body::before {
             content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 100;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.3), inset 0 0 100px rgba(74, 55, 40, 0.1);
-            border: 15px solid transparent;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none; z-index: 100;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
+            border: 10px solid transparent;
             border-image: url('https://www.transparenttextures.com/patterns/black-linen.png') 30 round;
-            opacity: 0.4;
-        }
-
-        /* Efeito de luz de vela oscilante */
-        .candle-light {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 80;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.05) 100%);
-            animation: flicker 4s infinite;
-        }
-
-        @keyframes flicker {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-            70% { opacity: 0.9; }
-        }
-
-        .scroll-container {
-            scrollbar-width: thin;
-            scrollbar-color: var(--ink-color) transparent;
-        }
-
-        input, textarea {
-            background: transparent;
-            border: 1px solid rgba(74, 55, 40, 0.2);
-        }
-
-        .parchment-shadow {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(0,0,0,0.05);
+            opacity: 0.3;
         }
 
         .vignette-danger {
-            pointer-events: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 120px rgba(185, 28, 28, 0.6);
-            z-index: 9999;
-            animation: pulse-danger 2s infinite;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
+            pointer-events: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 120px rgba(185, 28, 28, 0.7);
+            z-index: 99; opacity: 0; transition: opacity 0.5s;
         }
 
-        .vignette-active {
-            opacity: 1;
+        .vignette-active { opacity: 1; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 0.8; } 100% { opacity: 0.5; } }
+
+        /* Estilo de Pergaminho */
+        .parchment-card {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(74, 55, 40, 0.15);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05), inset 0 0 20px rgba(0,0,0,0.05);
+            border-radius: 1rem;
         }
 
-        @keyframes pulse-danger {
-            0% { box-shadow: inset 0 0 80px rgba(185, 28, 28, 0.4); }
-            50% { box-shadow: inset 0 0 180px rgba(185, 28, 28, 0.8); }
-            100% { box-shadow: inset 0 0 80px rgba(185, 28, 28, 0.4); }
+        .strike-through { text-decoration: line-through; opacity: 0.5; }
+
+        /* Navegação */
+        nav {
+            background: var(--ink-color);
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
         }
 
-        .strike-through {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
+        .tab-btn.active { color: #fff; opacity: 1; transform: scale(1.1); }
+        .tab-btn { opacity: 0.5; transition: all 0.3s; }
 
-        .ink-stain {
-            position: relative;
-        }
-        .ink-stain::after {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: radial-gradient(circle, rgba(74, 55, 40, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
+        .hidden { display: none; }
 
-        .tab-content {
-            animation: fade-in 0.3s ease-out;
+        /* Frasco de Vida */
+        .flask {
+            width: 40px; height: 55px;
+            border: 2px solid var(--ink-color);
+            border-radius: 0 0 15px 15px;
+            position: relative; overflow: hidden;
+            background: rgba(255,255,255,0.2);
         }
-
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .flask-liquid {
-            transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .flask-fill {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, #7f1d1d, #ef4444);
+            transition: height 0.5s ease-in-out;
         }
     </style>
 <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-dom": "https://esm.sh/react-dom@^19.2.3",
-    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
-<body class="selection:bg-[#4a3728] selection:text-white">
-    <div class="candle-light"></div>
-    <div id="vignette" class="vignette-danger"></div>
-    <div id="root"></div>
-    
-    <!-- Esta linha é CRUCIAL para carregar o seu código React -->
-    <script type="module" src="./index.tsx"></script>
+<body class="pb-24">
+    <div id="danger-vignette" class="vignette-danger"></div>
+
+    <!-- Header -->
+    <header class="p-4 text-center border-b border-[#4a3728]/10 sticky top-0 bg-[#f3e5ab]/80 backdrop-blur-md z-50">
+        <h1 class="medieval-font text-2xl font-bold uppercase tracking-tighter">O Templo do Terror</h1>
+        <div class="flex justify-center items-center gap-2 mt-1">
+            <span class="text-[10px] uppercase font-bold opacity-60">Parágrafo:</span>
+            <input id="currentParagraph" type="text" class="w-12 text-center bg-transparent border-none text-xs font-bold focus:ring-0" placeholder="...">
+            <button onclick="resetGame()" class="ml-2 opacity-30 hover:opacity-100">🔄</button>
+        </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <main class="p-4 space-y-6 max-w-md mx-auto">
+        
+        <!-- ABA: HERÓI -->
+        <div id="tab-hero" class="tab-content">
+            <!-- HABILIDADE -->
+            <div class="parchment-card p-4 mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="medieval-font text-xl font-bold uppercase">Habilidade</h2>
+                    <div class="text-[10px] flex items-center gap-2 uppercase font-bold opacity-60">
+                        Inic: 
+                        <button onclick="changeAttr('skill', 'initial', -1)" class="w-5 h-5 bg-black/5 rounded">-</button>
+                        <span id="skill-initial">0</span>
+                        <button onclick="changeAttr('skill', 'initial', 1)" class="w-5 h-5 bg-black/5 rounded">+</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-white/30 p-3 rounded-xl">
+                    <button onclick="changeAttr('skill', 'current', -1)" class="w-12 h-12 bg-[#4a3728] text-white rounded-full text-2xl shadow-lg active:scale-90">-</button>
+                    <div class="text-center">
+                        <span id="skill-current" class="text-4xl font-bold medieval-font">0</span>
+                        <p class="text-[8px] uppercase font-bold opacity-40">Atual</p>
+                    </div>
+                    <button onclick="changeAttr('skill', 'current', 1)" class="w-12 h-12 bg-[#4a3728] text-white rounded-full text-2xl shadow-lg active:scale-90">+</button>
+                </div>
+            </div>
+
+            <!-- ENERGIA -->
+            <div class="parchment-card p-4 mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="medieval-font text-xl font-bold uppercase">Energia</h2>
+                    <div class="text-[10px] flex items-center gap-2 uppercase font-bold opacity-60">
+                        Inic: 
+                        <button onclick="changeAttr('stamina', 'initial', -1)" class="w-5 h-5 bg-black/5 rounded">-</button>
+                        <span id="stamina-initial">0</span>
+                        <button onclick="changeAttr('stamina', 'initial', 1)" class="w-5 h-5 bg-black/5 rounded">+</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-white/30 p-3 rounded-xl gap-4">
+                    <div class="flask"><div id="flask-fill" class="flask-fill" style="height: 0%"></div></div>
+                    <button onclick="changeAttr('stamina', 'current', -1)" class="w-12 h-12 bg-red-900 text-white rounded-full text-2xl shadow-lg active:scale-90">-</button>
+                    <div class="text-center">
+                        <span id="stamina-current" class="text-4xl font-bold medieval-font">0</span>
+                    </div>
+                    <button onclick="changeAttr('stamina', 'current', 1)" class="w-12 h-12 bg-red-900 text-white rounded-full text-2xl shadow-lg active:scale-90">+</button>
+                </div>
+            </div>
+
+            <!-- SORTE -->
+            <div class="parchment-card p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="medieval-font text-xl font-bold uppercase">Sorte</h2>
+                    <div class="text-[10px] flex items-center gap-2 uppercase font-bold opacity-60">
+                        Inic: 
+                        <button onclick="changeAttr('luck', 'initial', -1)" class="w-5 h-5 bg-black/5 rounded">-</button>
+                        <span id="luck-initial">0</span>
+                        <button onclick="changeAttr('luck', 'initial', 1)" class="w-5 h-5 bg-black/5 rounded">+</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-white/30 p-3 rounded-xl mb-3">
+                    <button onclick="changeAttr('luck', 'current', -1)" class="w-12 h-12 bg-green-900 text-white rounded-full text-2xl shadow-lg active:scale-90">-</button>
+                    <div class="text-center">
+                        <span id="luck-current" class="text-4xl font-bold medieval-font">0</span>
+                    </div>
+                    <button onclick="changeAttr('luck', 'current', 1)" class="w-12 h-12 bg-green-900 text-white rounded-full text-2xl shadow-lg active:scale-90">+</button>
+                </div>
+                <button onclick="testLuck()" class="w-full py-3 bg-[#4a3728] text-[#f3e5ab] rounded-xl text-xs font-bold uppercase tracking-widest active:scale-95 shadow-md">🍀 Testar Sorte</button>
+            </div>
+        </div>
+
+        <!-- ABA: ITENS -->
+        <div id="tab-items" class="tab-content hidden">
+            <div class="parchment-card p-4">
+                <h3 class="medieval-font font-bold uppercase text-sm mb-2 opacity-60">Mochila e Equipamentos</h3>
+                <textarea id="equipment" class="w-full h-40 bg-transparent border-none focus:ring-0 text-sm leading-relaxed" placeholder="Armas, pergaminhos..."></textarea>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="parchment-card p-4 text-center">
+                    <h3 class="medieval-font font-bold uppercase text-[10px] opacity-60">Ouro</h3>
+                    <input id="gold" type="number" class="w-full text-center text-3xl font-bold bg-transparent border-none focus:ring-0" value="0">
+                </div>
+                <div class="parchment-card p-4 text-center">
+                    <h3 class="medieval-font font-bold uppercase text-[10px] opacity-60">Provisões</h3>
+                    <div class="flex justify-around items-center mt-2">
+                        <button onclick="changeProvisions(-1)" class="text-xl">➖</button>
+                        <span id="provisions-count" class="text-3xl font-bold medieval-font">0</span>
+                        <button onclick="changeProvisions(1)" class="text-xl">➕</button>
+                    </div>
+                    <button onclick="eat()" class="mt-2 text-[8px] uppercase font-bold bg-[#4a3728] text-white p-1 w-full rounded">Comer (+4 EN)</button>
+                </div>
+            </div>
+
+            <div class="parchment-card p-4 mt-4">
+                <h3 class="medieval-font font-bold uppercase text-sm mb-2 opacity-60">Magias Memorizadas</h3>
+                <div id="spells-list" class="space-y-2 mb-3"></div>
+                <div class="flex gap-2">
+                    <input id="new-spell" type="text" class="flex-1 bg-white/20 border-none rounded-lg p-2 text-xs" placeholder="Nova magia...">
+                    <button onclick="addSpell()" class="bg-[#4a3728] text-white px-3 rounded-lg text-xs">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: COMBATE -->
+        <div id="tab-combat" class="tab-content hidden">
+            <div class="parchment-card p-4">
+                <h3 class="medieval-font font-bold uppercase text-sm mb-2 opacity-60">Notas e Diário</h3>
+                <textarea id="notes" class="w-full h-32 bg-transparent border-none focus:ring-0 text-sm leading-relaxed" placeholder="Dicas e rumos..."></textarea>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="medieval-font font-bold uppercase text-sm mb-3 opacity-60">Bestiário</h3>
+                <div id="monsters-list" class="space-y-4"></div>
+                <div class="mt-4 bg-white/20 p-3 rounded-xl border border-black/5">
+                    <input id="new-monster" type="text" class="w-full bg-transparent border-none p-2 text-sm font-bold uppercase" placeholder="Nome do Monstro...">
+                    <button onclick="addMonster()" class="w-full mt-2 bg-[#4a3728] text-white py-2 rounded-lg text-xs font-bold uppercase">Registrar Encontro</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Dados -->
+    <div id="dice-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center hidden">
+        <div class="bg-[#f3e5ab] p-8 rounded-3xl border-4 border-[#4a3728] w-72 text-center relative">
+            <button onclick="toggleDice(false)" class="absolute top-2 right-4 text-2xl">×</button>
+            <h3 class="medieval-font text-xl font-bold mb-6">Lançar Dados</h3>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="roll(1)" class="bg-[#4a3728] text-white p-4 rounded-xl font-bold">1D6</button>
+                <button onclick="roll(2)" class="bg-[#4a3728] text-white p-4 rounded-xl font-bold">2D6</button>
+            </div>
+            <div id="dice-result" class="h-20 flex flex-col items-center justify-center">
+                <p class="text-xs opacity-50 italic">Aguardando...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante Dados -->
+    <button onclick="toggleDice(true)" class="fixed bottom-24 right-6 w-16 h-16 bg-[#4a3728] text-[#f3e5ab] rounded-full shadow-2xl z-[60] text-3xl flex items-center justify-center border-4 border-[#f3e5ab]/20 active:scale-90">🎲</button>
+
+    <!-- Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 h-20 flex items-center justify-around z-[150] text-[#f3e5ab]">
+        <button onclick="setTab('hero')" class="tab-btn active flex flex-col items-center" id="btn-hero">
+            <span class="text-xl">🛡️</span>
+            <span class="text-[9px] font-bold medieval-font">HERÓI</span>
+        </button>
+        <button onclick="setTab('items')" class="tab-btn flex flex-col items-center" id="btn-items">
+            <span class="text-xl">🎒</span>
+            <span class="text-[9px] font-bold medieval-font">ITENS</span>
+        </button>
+        <button onclick="setTab('combat')" class="tab-btn flex flex-col items-center" id="btn-combat">
+            <span class="text-xl">⚔️</span>
+            <span class="text-[9px] font-bold medieval-font">NOTAS</span>
+        </button>
+    </nav>
 
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').then(reg => {
-            console.log('SW registered!', reg);
-          }).catch(err => {
-            console.log('SW registration failed: ', err);
-          });
-        });
-      }
+        // ESTADO INICIAL
+        let state = {
+            currentParagraph: "",
+            skill: { current: 10, initial: 10 },
+            stamina: { current: 20, initial: 20 },
+            luck: { current: 9, initial: 9 },
+            equipment: "",
+            gold: 0,
+            provisions: 10,
+            notes: "",
+            spells: [],
+            monsters: []
+        };
+
+        // CARREGAR DADOS
+        function load() {
+            const saved = localStorage.getItem('templo-terror-save-v2');
+            if (saved) state = JSON.parse(saved);
+            syncUI();
+        }
+
+        function save() {
+            localStorage.setItem('templo-terror-save-v2', JSON.stringify(state));
+        }
+
+        // SINCRONIZAR UI
+        function syncUI() {
+            document.getElementById('currentParagraph').value = state.currentParagraph || "";
+            
+            // Atributos
+            ['skill', 'stamina', 'luck'].forEach(attr => {
+                const curEl = document.getElementById(`${attr}-current`);
+                const iniEl = document.getElementById(`${attr}-initial`);
+                if(curEl) curEl.innerText = state[attr].current;
+                if(iniEl) iniEl.innerText = state[attr].initial;
+            });
+
+            // Stamina Flask
+            const flaskFill = document.getElementById('flask-fill');
+            if(flaskFill) {
+                const perc = (state.stamina.current / (state.stamina.initial || 1)) * 100;
+                flaskFill.style.height = Math.min(100, perc) + '%';
+            }
+            
+            // Vignette de Perigo
+            const vignette = document.getElementById('danger-vignette');
+            if (vignette) {
+                if (state.stamina.current > 0 && state.stamina.current < 5) {
+                    vignette.classList.add('vignette-active');
+                } else {
+                    vignette.classList.remove('vignette-active');
+                }
+            }
+
+            // Itens
+            const eqEl = document.getElementById('equipment');
+            const goldEl = document.getElementById('gold');
+            const provEl = document.getElementById('provisions-count');
+            const noteEl = document.getElementById('notes');
+
+            if(eqEl) eqEl.value = state.equipment || "";
+            if(goldEl) goldEl.value = state.gold || 0;
+            if(provEl) provEl.innerText = state.provisions || 0;
+            if(noteEl) noteEl.value = state.notes || "";
+
+            // Listas
+            renderSpells();
+            renderMonsters();
+        }
+
+        // LÓGICA DE ATRIBUTOS
+        function changeAttr(attr, field, delta) {
+            state[attr][field] = Math.max(0, state[attr][field] + delta);
+            save();
+            syncUI();
+            if (window.navigator.vibrate) window.navigator.vibrate(20);
+        }
+
+        function changeProvisions(delta) {
+            state.provisions = Math.max(0, state.provisions + delta);
+            save();
+            syncUI();
+        }
+
+        function eat() {
+            if (state.provisions > 0) {
+                state.provisions--;
+                state.stamina.current = Math.min(state.stamina.initial, state.stamina.current + 4);
+                save();
+                syncUI();
+                if (window.navigator.vibrate) window.navigator.vibrate([30, 20, 30]);
+            }
+        }
+
+        // ABAS
+        function setTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            const tab = document.getElementById(`tab-${tabName}`);
+            const btn = document.getElementById(`btn-${tabName}`);
+            if(tab) tab.classList.remove('hidden');
+            if(btn) btn.classList.add('active');
+            if (window.navigator.vibrate) window.navigator.vibrate(10);
+        }
+
+        // MAGIAS
+        function addSpell() {
+            const input = document.getElementById('new-spell');
+            if (input && input.value.trim()) {
+                state.spells.push({ id: Date.now(), name: input.value, used: false });
+                input.value = "";
+                save(); renderSpells();
+            }
+        }
+
+        function renderSpells() {
+            const container = document.getElementById('spells-list');
+            if(!container) return;
+            container.innerHTML = state.spells.map(s => `
+                <div class="flex items-center gap-2 bg-white/20 p-2 rounded-lg text-xs">
+                    <input type="checkbox" ${s.used ? 'checked' : ''} onchange="toggleSpell(${s.id})" class="rounded-full">
+                    <span class="flex-1 ${s.used ? 'strike-through' : ''}">${s.name}</span>
+                    <button onclick="deleteSpell(${s.id})" class="text-red-900 opacity-30">×</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleSpell(id) {
+            const s = state.spells.find(x => x.id === id);
+            if (s) s.used = !s.used;
+            save(); renderSpells();
+        }
+
+        function deleteSpell(id) {
+            state.spells = state.spells.filter(x => x.id !== id);
+            save(); renderSpells();
+        }
+
+        // BESTIÁRIO
+        function addMonster() {
+            const input = document.getElementById('new-monster');
+            if (input && input.value.trim()) {
+                state.monsters.push({ id: Date.now(), name: input.value, skill: 0, stamina: 0 });
+                input.value = "";
+                save(); renderMonsters();
+            }
+        }
+
+        function renderMonsters() {
+            const container = document.getElementById('monsters-list');
+            if(!container) return;
+            container.innerHTML = state.monsters.map(m => `
+                <div class="parchment-card p-4 bg-white/40">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-bold text-sm uppercase">${m.name}</span>
+                        <button onclick="deleteMonster(${m.id})" class="text-red-900 text-xs">REMOVER</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center bg-black/5 p-2 rounded">
+                            <p class="text-[8px] font-bold opacity-50">HABILIDADE</p>
+                            <div class="flex justify-between items-center">
+                                <button onclick="changeMonster(${m.id}, 'skill', -1)">-</button>
+                                <span class="medieval-font text-xl">${m.skill}</span>
+                                <button onclick="changeMonster(${m.id}, 'skill', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="text-center bg-red-900/5 p-2 rounded">
+                            <p class="text-[8px] font-bold opacity-50 text-red-900">ENERGIA</p>
+                            <div class="flex justify-between items-center text-red-900">
+                                <button onclick="changeMonster(${m.id}, 'stamina', -1)">-</button>
+                                <span class="medieval-font text-xl">${m.stamina}</span>
+                                <button onclick="changeMonster(${m.id}, 'stamina', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeMonster(id, field, delta) {
+            const m = state.monsters.find(x => x.id === id);
+            if (m) m[field] = Math.max(0, m[field] + delta);
+            save(); renderMonsters();
+        }
+
+        function deleteMonster(id) {
+            if(confirm("Remover monstro?")) {
+                state.monsters = state.monsters.filter(x => x.id !== id);
+                save(); renderMonsters();
+            }
+        }
+
+        // DADOS
+        function toggleDice(show) {
+            const modal = document.getElementById('dice-modal');
+            if(modal) modal.classList.toggle('hidden', !show);
+            const res = document.getElementById('dice-result');
+            if(res) res.innerHTML = '<p class="text-xs opacity-50 italic">Aguardando...</p>';
+        }
+
+        function roll(num) {
+            const container = document.getElementById('dice-result');
+            if(!container) return;
+            container.innerHTML = '<span class="animate-bounce text-4xl">🎲</span>';
+            if (window.navigator.vibrate) window.navigator.vibrate([20, 10, 20]);
+            
+            setTimeout(() => {
+                let total = 0;
+                let diceHTML = '<div class="flex gap-2 mb-2">';
+                for(let i=0; i<num; i++) {
+                    const val = Math.floor(Math.random() * 6) + 1;
+                    total += val;
+                    diceHTML += `<div class="w-10 h-10 bg-white border-2 border-[#4a3728] rounded flex items-center justify-center font-bold text-xl">${val}</div>`;
+                }
+                diceHTML += '</div>';
+                container.innerHTML = diceHTML + `<p class="font-bold text-lg uppercase medieval-font">Total: ${total}</p>`;
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
+            }, 500);
+        }
+
+        function testLuck() {
+            const r = Math.floor(Math.random() * 6) + Math.floor(Math.random() * 6) + 2;
+            const success = r <= state.luck.current;
+            
+            alert(`Rolou: ${r}\nSorte Atual: ${state.luck.current}\n\n${success ? '🍀 SUCESSO!' : '💀 FALHA!'}`);
+            
+            state.luck.current = Math.max(0, state.luck.current - 1);
+            save();
+            syncUI();
+        }
+
+        function resetGame() {
+            if(confirm("Reiniciar toda a ficha?")) {
+                localStorage.removeItem('templo-terror-save-v2');
+                location.reload();
+            }
+        }
+
+        // LISTENERS
+        document.getElementById('currentParagraph').addEventListener('input', (e) => { state.currentParagraph = e.target.value; save(); });
+        document.getElementById('equipment').addEventListener('input', (e) => { state.equipment = e.target.value; save(); });
+        document.getElementById('notes').addEventListener('input', (e) => { state.notes = e.target.value; save(); });
+        document.getElementById('gold').addEventListener('input', (e) => { state.gold = e.target.value; save(); });
+
+        // INICIAR
+        load();
     </script>
 </body>
 </html>

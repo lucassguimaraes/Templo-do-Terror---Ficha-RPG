@@ -1,16 +1,4 @@
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
-
-const root = ReactDOM.createRoot(rootElement as HTMLElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// O aplicativo agora utiliza exclusivamente Vanilla JavaScript dentro do index.html.
+// Este arquivo foi mantido vazio para evitar erros de compilação ou execução automática do ambiente.
+export {};
