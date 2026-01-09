@@ -23,6 +23,7 @@
         body {
             font-family: 'Special Elite', cursive;
             background-color: var(--parchment-bg);
+            /* URL absoluta para evitar erro 404 */
             background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
@@ -141,8 +142,10 @@
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
@@ -153,6 +156,10 @@
     <div class="candle-light"></div>
     <div id="vignette" class="vignette-danger"></div>
     <div id="root"></div>
+    
+    <!-- Esta linha é CRUCIAL para carregar o seu código React -->
+    <script type="module" src="./index.tsx"></script>
+
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
